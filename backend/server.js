@@ -1,7 +1,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const userRoutes = require('./routes/userRoutes');
-// const rugsRoutes = require('./routes/rugsRoutes');
+const cors = require("cors");
+const postRoutes = require('./routes/postRoutes');
 const { errorHandler } = require('./middleware/errorMiddleware');
 
 const colors = require("colors");
@@ -12,8 +13,13 @@ const app = express();
 
 app.use(express.json()); // to accept json data
 
+app.use(cors({
+    origin: ["http://localhost:3000", ""]
+}));
+
+
 app.use('/api/user', userRoutes);
-// app.use('/api/rugs', rugsRoutes);
+app.use('/api/posts', postRoutes);
 
 app.use(errorHandler);
 

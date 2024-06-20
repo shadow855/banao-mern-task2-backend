@@ -65,19 +65,14 @@ const authUser = asyncHandler(async (req, res) => {
 });
 
 const forgotPassword = asyncHandler(async (req, res) => {
-    const { username, email, password } = req.body;
+    const { email, updatedpassword } = req.body;
 
-    if (!(username || email) || !password) {
+    if (!email || !updatedpassword) {
         res.status(400);
-        throw new Error("Please enter username or email and the password to change.");
+        throw new Error("Please enter all the fields.");
     }
 
-    let user;
-    if (username) {
-        user = await User.findOne({ username });
-    } else if (email) {
-        user = await User.findOne({ email });
-    }
+    const user = await User.findOne({ email });
 
     if (!user) {
         res.status(400);
@@ -85,7 +80,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
     }
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(updatedpassword, salt);
 
     const updatedUser = await User.findByIdAndUpdate(
         user._id,
