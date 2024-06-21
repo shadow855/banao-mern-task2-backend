@@ -25,15 +25,16 @@ const addPost = asyncHandler(async (req, res) => {
 const getMyPost = asyncHandler(async (req, res) => {
     const userId = req.user._id;
 
-    const posts = await Post.find({ user: userId }).populate('user', '-password -email');
+    const posts = await Post.find({ user: userId }).populate('user', '-password -email').sort({ createdAt: -1 });;
 
     res.status(200).json(posts);
 });
 
 const getAllPosts = asyncHandler(async (req, res) => {
-    const posts = await Post.find().populate('user', '-password -email');
+    const userId = req.user._id;
+    const posts = await Post.find().populate('user', '-password -email').sort({ createdAt: -1 });;
 
-    res.status(200).json(posts);
+    res.status(200).json({ userId, posts });
 });
 
 const updatePost = asyncHandler(async (req, res) => {
@@ -96,4 +97,32 @@ const deletePost = asyncHandler(async (req, res) => {
     res.status(200).json({ message: 'Post deleted successfully' });
 });
 
-module.exports = { addPost, getMyPost, getAllPosts, updatePost, deletePost }
+const addLikeToPost = asyncHandler(async (req, res) => {
+    const postId = req.params.id;
+    const userId = req.user._id;
+
+    const post = await Post.findById(postId);
+
+    if (!post) {
+        res.status(404);
+        throw new Error('Post not found');
+    }
+
+    const isLiked = post.likes.includes(userId);
+
+    if (isLiked) {
+        await Post.updateOne(
+            { _id: postId },
+            { $pull: { likes: userId } }
+        );
+        res.status(200).json({ message: 'Post unliked successfully' });
+    } else {
+        await Post.updateOne(
+            { _id: postId },
+            { $push: { likes: userId } }
+        );
+        res.status(200).json({ message: 'Post liked successfully' });
+    }
+});
+
+module.exports = { addPost, getMyPost, getAllPosts, updatePost, deletePost, addLikeToPost }
