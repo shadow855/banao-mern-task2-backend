@@ -25,14 +25,14 @@ const addPost = asyncHandler(async (req, res) => {
 const getMyPost = asyncHandler(async (req, res) => {
     const userId = req.user._id;
 
-    const posts = await Post.find({ user: userId }).populate('user', '-password -email').sort({ createdAt: -1 });;
+    const posts = await Post.find({ user: userId }).populate('user', '-password -email').sort({ updatedAt: -1 });
 
     res.status(200).json({ userId, posts });
 });
 
 const getAllPosts = asyncHandler(async (req, res) => {
     const userId = req.user._id;
-    const posts = await Post.find().populate('user', '-password -email').sort({ createdAt: -1 });;
+    const posts = await Post.find().populate('user', '-password -email').sort({ updatedAt: -1 });
 
     res.status(200).json({ userId, posts });
 });
