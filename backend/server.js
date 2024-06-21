@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const userRoutes = require('./routes/userRoutes');
 const cors = require("cors");
 const postRoutes = require('./routes/postRoutes');
+const commentRoutes = require('./routes/commentRoutes');
 const { errorHandler } = require('./middleware/errorMiddleware');
 
 const colors = require("colors");
@@ -20,6 +21,7 @@ app.use(cors({
 
 app.use('/api/user', userRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/api/comments', commentRoutes);
 
 app.use(errorHandler);
 

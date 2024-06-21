@@ -27,7 +27,7 @@ const getMyPost = asyncHandler(async (req, res) => {
 
     const posts = await Post.find({ user: userId }).populate('user', '-password -email').sort({ createdAt: -1 });;
 
-    res.status(200).json(posts);
+    res.status(200).json({ userId, posts });
 });
 
 const getAllPosts = asyncHandler(async (req, res) => {

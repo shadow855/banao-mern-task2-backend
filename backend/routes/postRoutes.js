@@ -11,8 +11,4 @@ router.route('/updatepost/:id').put(protect, updatePost);
 router.route('/addlike/:id').put(protect, addLikeToPost);
 router.route('/deletepost/:id').delete(protect, deletePost);
 
-// router.route('/login').post(authUser);
-// router.route('/forgotpassword').put(forgotPassword);
-// router.route('/').get(allUsers);
-
 module.exports = router;
